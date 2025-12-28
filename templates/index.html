@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarm Controller</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; width: 300px; }
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #2196F3; }
+        input:checked + .slider:before { transform: translateX(26px); }
+        .status-text { margin-top: 1rem; font-weight: bold; color: #555; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Set Wake-up Time</h2>
+    <input type="time" id="alarmTime" class="time-input" value="{{ current_time }}">
+    
+    <button onclick="saveAlarm()" class="save-btn">Update Alarm</button>
+    
+    <div id="status" class="status-text">
+        Current Alarm: <span id="displayTime">{{ current_time }}</span>
+    </div>
+</div>
+
+<style>
+    .time-input {
+        font-size: 2rem;
+        padding: 10px;
+        border-radius: 8px;
+        border: 2px solid #2196F3;
+        margin-bottom: 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .save-btn {
+        background-color: #2196F3;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+    }
+    .save-btn:active { background-color: #1976D2; }
+</style>
+
+<script>
+    async function saveAlarm() {
+        const timeVal = document.getElementById('alarmTime').value;
+        const statusDiv = document.getElementById('status');
+        const displayTime = document.getElementById('displayTime');
+
+        try {
+            const response = await fetch('/set-alarm-time', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ time: timeVal })
+            });
+            
+            if (response.ok) {
+                // Update the UI text immediately
+                displayTime.innerText = timeVal;
+                statusDiv.style.color = "#2196F3";
+            }
+        } catch (error) {
+            console.error("Failed to save:", error);
+        }
+    }
+</script>
+
+</body>
+</html>
