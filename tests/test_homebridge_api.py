@@ -53,6 +53,14 @@ def test_get_alarm_time(hb_client, mock_config, mocker):
 
     assert actual_time == expected_local
 
+    # Test when get_full_config runs into an error
+    mocker.patch.object(hb_client, 'get_full_config', return_value=None)
+    gmt_error = datetime(now.year, now.month, now.day, 12, 0, tzinfo=timezone.utc)
+    expected_error = gmt_error.strftime("%H:%M")
+
+    actual_time = hb_client.get_alarm_time()
+    assert actual_time == expected_error
+
 def test_update_time(hb_client, mock_config, mocker):
     """Tests the update_alarm time from HB Client"""
     mocker.patch.object(hb_client, 'get_full_config', return_value=mock_config)

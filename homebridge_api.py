@@ -1,7 +1,9 @@
-import requests
+"""Class to connect to Homebridge API to update morning_switch in Homebridge Dummy plugin"""
 from datetime import datetime, timezone, timedelta
+import requests
 
 class HomebridgeClient:
+    """Connects to the Homebridge API to update a switch in Homebridge Dummy plugin"""
     def __init__(self, base_url, username, password):
         self.base_url = base_url.rstrip('/')
         self.username = username
@@ -14,7 +16,7 @@ class HomebridgeClient:
         url = f"{self.base_url}/api/auth/login"
         payload = {"username": self.username, "password": self.password}
 
-        response = requests.post(url, json=payload)
+        response = requests.post(url, json=payload, timeout=10)
         response.raise_for_status()
         self.token = response.json().get("access_token")
         self.headers = {"Authorization": f"Bearer {self.token}"}
@@ -100,6 +102,7 @@ class HomebridgeClient:
 
         if found:
             url = f"{self.base_url}/api/config-editor/plugin/homebridge-dummy"
-            res = requests.post(url, json=full_config, headers=self.headers)
-            return res.status_code == 200
+            res = requests.post(url, json=full_config, headers=self.headers, timeout=10)
+            return res.ok
         return False
+    
