@@ -69,11 +69,17 @@ class HomebridgeClient:
             return "12:00"
     
     def update_morning_alarm(self, local_time_str):
+        """
+        Updates the alarm config in Homebridge UI
+        
+        :param self: Description
+        :param local_time_str: Description
+        """
         full_config = self.get_full_config()
         if not full_config:
             return False
         
-        now = datetime.now()
+        now = datetime.now().astimezone()
         local_dt = datetime.strptime(local_time_str, "%H:%M").replace(
             year=now.year, month=now.month, day=now.day, tzinfo=now.astimezone().tzinfo)
         

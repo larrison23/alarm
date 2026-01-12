@@ -1,9 +1,11 @@
+"""Testing for HB Client"""
+from datetime import datetime, timezone
 import pytest
 from homebridge_api import HomebridgeClient
-from datetime import datetime, timezone
 
 @pytest.fixture
 def hb_client():
+    """Initializes the HB Client"""
     client = HomebridgeClient("http://10.0.0.227:8581", "admin", "password123")
     client.token = "fake_token"
     client.headers = {"Authorization": "Bearer fake_token"}
@@ -27,6 +29,7 @@ def mock_config():
     ]
 
 def test_login_success(hb_client, mocker):
+    """Tests the login for HB Client"""
     mock_post = mocker.patch('requests.post')
 
     mock_post.return_value.status_code = 200
@@ -39,6 +42,7 @@ def test_login_success(hb_client, mocker):
     mock_post.assert_called_once()
 
 def test_get_alarm_time(hb_client, mock_config, mocker):
+    """Tests the get_alarm function from HB Client"""
     mocker.patch.object(hb_client, 'get_full_config', return_value=mock_config)
 
     now = datetime.now()
@@ -49,3 +53,18 @@ def test_get_alarm_time(hb_client, mock_config, mocker):
 
     assert actual_time == expected_local
 
+def test_update_time(hb_client, mock_config, mocker):
+    """Tests the update_alarm time from HB Client"""
+    mocker.patch.object(hb_client, 'get_full_config', return_value=mock_config)
+    mock_post = mocker.patch('requests.post')
+    mock_post.return_value.status_code = 200
+
+    hb_client.update_morning_alarm("08:00")
+
+    args, kwargs = mock_post.call_args
+    updated_config = kwargs['json']
+
+    new_cron = updated_config[0]['accessories'][0]['schedule']['cronCustom']
+
+    assert "*" in new_cron
+    assert len(new_cron.split()) == 5
