@@ -37,3 +37,6 @@ def set_alarm_time():
     except Exception as e:
         return jsonify({"error": f"Internal Server Error: {str(e)}"}), 500
     
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5050)
+    
