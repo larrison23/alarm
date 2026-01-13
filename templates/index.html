@@ -24,9 +24,7 @@
     
     <button onclick="saveAlarm()" class="save-btn">Update Alarm</button>
     
-    <div id="status" class="status-text">
-        Current Alarm: <span id="displayTime">{{ current_time }}</span>
-    </div>
+    <div id="status" class="status-text"></div>
 </div>
 
 <style>
@@ -58,6 +56,9 @@
         const statusDiv = document.getElementById('status');
         const displayTime = document.getElementById('displayTime');
 
+        statusDiv.innerText = "Syncing with Homebridge...";
+        statusDiv.style.color = "#FFA500";
+
         try {
             const response = await fetch('/set-alarm-time', {
                 method: 'POST',
@@ -69,6 +70,13 @@
                 // Update the UI text immediately
                 displayTime.innerText = timeVal;
                 statusDiv.style.color = "#2196F3";
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
+            } else {
+                statusDiv.innerText = "Failed to update";
+                statusDiv.style.color = "#f44336";
             }
         } catch (error) {
             console.error("Failed to save:", error);

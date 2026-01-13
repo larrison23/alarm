@@ -88,6 +88,8 @@ class HomebridgeClient:
         if local_dt < now:
             local_dt += timedelta(days=1)
 
+        local_dt -= timedelta(minutes=6)
+
         gmt_dt = local_dt.astimezone(timezone.utc)
 
         new_cron = f"{gmt_dt.minute} {gmt_dt.hour} * * *"
