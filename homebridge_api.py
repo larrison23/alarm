@@ -66,6 +66,8 @@ class HomebridgeClient:
             gmt_time = datetime.now(timezone.utc).replace(hour=hour_gmt, minute=minute)
             local_time = gmt_time.astimezone()
 
+            local_time += timedelta(minutes=6)
+
             return local_time.strftime("%H:%M")
         except (IndexError, KeyError, ValueError):
             return "12:00"

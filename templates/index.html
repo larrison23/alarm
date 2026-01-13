@@ -55,7 +55,9 @@
         const timeVal = document.getElementById('alarmTime').value;
         const statusDiv = document.getElementById('status');
         const displayTime = document.getElementById('displayTime');
+        const updateBtn = document.querySelector('button');
 
+        updateBtn.disabled = true;
         statusDiv.innerText = "Syncing with Homebridge...";
         statusDiv.style.color = "#FFA500";
 
@@ -71,15 +73,18 @@
                 displayTime.innerText = timeVal;
                 statusDiv.style.color = "#2196F3";
 
+                if (displayTime) displayTime.innerText = timeVal;
+
                 setTimeout(() => {
                     window.location.reload();
-                }, 500);
+                }, 1000);
             } else {
                 statusDiv.innerText = "Failed to update";
                 statusDiv.style.color = "#f44336";
             }
         } catch (error) {
             console.error("Failed to save:", error);
+            updateBtn.disabled = false;
         }
     }
 </script>
