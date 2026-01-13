@@ -8,6 +8,7 @@ services:
     ports:
       - "5050:5050"
     environment:
+      - TZ=America/New_York
       - HB_BASE_URL=${HB_BASE_URL}
       - HB_USERNAME=${HB_USERNAME}
       - HB_PASSWORD=${HB_PASSWORD}

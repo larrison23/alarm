@@ -20,6 +20,9 @@
 
 <div class="card">
     <h2>Set Wake-up Time</h2>
+
+    <p>Current setting: <span id="displayTime">{{ current_time }}</span></p>
+
     <input type="time" id="alarmTime" class="time-input" value="{{ current_time }}">
     
     <button onclick="saveAlarm()" class="save-btn">Update Alarm</button>
@@ -65,8 +68,10 @@
             const response = await fetch('/set-alarm-time', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ time: timeVal })
+                body: JSON.stringify({ time: timeVal.trim() })
             });
+
+            console.log("Response status:", response.status);
             
             if (response.ok) {
                 // Update the UI text immediately

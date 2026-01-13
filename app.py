@@ -1,4 +1,3 @@
-import json
 import os
 from flask import Flask, render_template, jsonify, request
 from dotenv import load_dotenv
@@ -22,6 +21,7 @@ def index():
 
 @app.route("/set-alarm-time", methods=["POST"])
 def set_alarm_time():
+    """Sets the alarm time"""
     data = request.get_json()
     if not data or 'time' not in data:
         return jsonify({"error": "No time provided"}), 400
