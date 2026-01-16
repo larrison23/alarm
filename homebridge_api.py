@@ -48,14 +48,14 @@ class HomebridgeClient:
         config_data = self.get_full_config()
 
         if not config_data or not isinstance(config_data, list):
-            return "12:00"
+            return "12:01"
 
         try:
             accessories = config_data[0].get("accessories", [])
             morning_switch = next((acc for acc in accessories if acc["id"] == "morning_switch"), None)
 
             if not morning_switch:
-                return "12:00"
+                return "12:02"
             
             cron_str = morning_switch.get("schedule", {}).get("cronCustom", "0 12 * * *")
             parts = cron_str.split()
@@ -70,7 +70,7 @@ class HomebridgeClient:
 
             return local_time.strftime("%H:%M")
         except (IndexError, KeyError, ValueError):
-            return "12:00"
+            return "12:03"
     
     def update_morning_alarm(self, local_time_str):
         """
