@@ -107,6 +107,13 @@ class HomebridgeClient:
         if found:
             url = f"{self.base_url}/api/config-editor/plugin/homebridge-dummy"
             res = requests.post(url, json=full_config, headers=self.headers, timeout=10)
-            return res.ok
+
+            if not res.ok:
+                print(f"Config update failed: {res.status_code}")
+                return False
+            
+            url_restart = f"{self.base_url}/api/server/restart/0E24DC719E2B"
+            res_restart = requests.put(url_restart, headers=self.headers, timeout=10)
+            return res_restart.ok
         return False
     
